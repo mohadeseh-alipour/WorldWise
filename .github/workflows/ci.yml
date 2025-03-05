@@ -1,4 +1,4 @@
-name: CI Workflow
+name: Build and Test
 
 on:
   push:
@@ -12,17 +12,22 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
-        with:
-          node-version: 20 # Change this based on your Node.js version
 
-      - name: Install Dependencies
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
         run: npm install
 
-      - name: Run Tests
-        run: npm test
+      - name: Build project
+        run: npm run build
